@@ -1,5 +1,5 @@
 """
-Colour picker using OpenCV and webcam
+Color picker using OpenCV and webcam
 """
 
 MOUSE_LEFT = 1
