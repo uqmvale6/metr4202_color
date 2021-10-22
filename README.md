@@ -1,4 +1,4 @@
-# METR4202 Color Calibration Help
+# METR4202 Color Detection Help
 This is sample code that can be used for the METR4202 project demo.
 
 There are two files provided, both running on Python 3.
