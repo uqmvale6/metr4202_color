@@ -59,7 +59,7 @@ class ColorDetector:
     @classmethod
     def hsv2coord(cls, hsv):
         """
-        Maps to a cylinder with max radius = 1, height = 1
+        Maps to a cone with max radius = 1, height = 1
         This representation is singularity free compared to the HSV space
         """
         # Hue is normalised from 0 to 2 pi
@@ -72,7 +72,7 @@ class ColorDetector:
     def detect_color(self, bgr):
         """
         Color detection implementation  
-        Maps the HSV space as a cylinder, and finds the cartesian distance
+        Maps the HSV space as a cone, and finds the cartesian distance
         The closest distance color to the test color is the color returned.
         Black and white are also added to this color detection
         """
