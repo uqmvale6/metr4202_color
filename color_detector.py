@@ -1,3 +1,8 @@
+"""
+Color detector using OpenCV and Ximea Camera
+Author: Miguel Valencia
+"""
+
 import cv2
 import numpy as np
 import os
@@ -5,7 +10,6 @@ from math import *
 from numpy.core.fromnumeric import argmin
 from ximea import xiapi
 
-from color_picker import YELLOW
 '''
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
@@ -40,10 +44,16 @@ class ColorDetector:
 
     @classmethod
     def bgr2hsv(cls, bgr):
+        """
+        If only there was a nicer way to convert single triples of BGR to HSV
+        """
         return cv2.cvtColor(np.array([[bgr]]), cv2.COLOR_BGR2HSV)[0][0]
 
     @classmethod
     def hsv2bgr(cls, hsv):
+        """
+        If only there was a nicer way to convert single triples of HSV to BGR
+        """
         return cv2.cvtColor(np.array([[hsv]]), cv2.COLOR_HSV2BGR)[0][0]
 
     @classmethod
@@ -123,7 +133,6 @@ def demo():
     color_detector = ColorDetector(bgr_r, bgr_g, bgr_b, bgr_y)
 
     # Setup the XIMEA Camera
-    # For ROS, replace this with numpy array obtained from Image message
     cam = xiapi.Camera()
     cam.open_device()
     cam.set_exposure(10000)
