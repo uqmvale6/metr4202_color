@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 import os
 from math import *
-from numpy.core.fromnumeric import argmin
+from numpy.core.fromnumeric import argmin, argmax
 from ximea import xiapi
 
 '''
@@ -67,11 +67,11 @@ class ColorDetector:
         # Saturation is normalised from zero to 
         s = hsv[1] / 255
         v = hsv[2] / 255
-        return np.array([s * v * cos(h), s * v * sin(h), v])
+        return np.array([v * s * cos(h), v * s * sin(h), v])
 
     def detect_color(self, bgr):
         """
-        Color detection implementation
+        Color detection implementation  
         Maps the HSV space as a cylinder, and finds the cartesian distance
         The closest distance color to the test color is the color returned.
         Black and white are also added to this color detection
@@ -91,8 +91,8 @@ class ColorDetector:
         dist_y = np.linalg.norm(coord_test - coord_y)
         dist_w = np.linalg.norm(coord_test - coord_w)
         dist_k = np.linalg.norm(coord_test - coord_k)
-
-        return argmin([dist_r, dist_g, dist_b, dist_y, dist_w, dist_k])
+        dist_list = [dist_r, dist_g, dist_b, dist_y, dist_w, dist_k]
+        return argmin(dist_list)
 
 def mouse_callback(event, x, y, flags, params):
     """
@@ -102,7 +102,7 @@ def mouse_callback(event, x, y, flags, params):
     if event == MOUSE_LEFT:
         bgr = image[y, x, :].astype(np.uint8)
         # Print out the color detected
-        print("Detected " + ["red", "green", "blue", "yellow", "white", "black"][color_detector.detect_color(bgr)] + ".")
+        print("Detected " + ["red", "green", "blue", "yellow", "white", "black"][color_detector.detect_color(bgr)])
 
 
 
@@ -114,20 +114,28 @@ def demo():
     """
     # Read the colors.config file from each line and set the color arrays
     current_dir = os.getcwd()
-    file = open(current_dir + "/colors.config", 'r')
-    i = 0
-    for line in file:
-        entries = line.split(' ')
-        values = [int(x) for x in entries]
-        if i == 0:
-            bgr_r = np.array([values[0], values[1], values[2]]).astype(np.uint8)
-        if i == 1:
-            bgr_g = np.array([values[0], values[1], values[2]]).astype(np.uint8)
-        if i == 2:
-            bgr_b = np.array([values[0], values[1], values[2]]).astype(np.uint8)
-        if i == 3:
-            bgr_y = np.array([values[0], values[1], values[2]]).astype(np.uint8)
-        i += 1
+    try:
+        file = open(current_dir + "/colors.config", 'r')
+        i = 0
+        for line in file:
+            entries = line.split(' ')
+            values = [int(x) for x in entries]
+            if i == 0:
+                bgr_r = np.array([values[0], values[1], values[2]]).astype(np.uint8)
+            if i == 1:
+                bgr_g = np.array([values[0], values[1], values[2]]).astype(np.uint8)
+            if i == 2:
+                bgr_b = np.array([values[0], values[1], values[2]]).astype(np.uint8)
+            if i == 3:
+                bgr_y = np.array([values[0], values[1], values[2]]).astype(np.uint8)
+            i += 1
+    except FileNotFoundError:
+        print("Could not load color.config file")
+        print("Setting to default values:")
+        bgr_r = np.array([0, 0, 255]).astype(np.uint8)
+        bgr_g = np.array([0, 255, 0]).astype(np.uint8)
+        bgr_b = np.array([255, 0, 0]).astype(np.uint8)
+        bgr_y = np.array([0, 255, 255]).astype(np.uint8)
 
     # Initialise the color detector
     color_detector = ColorDetector(bgr_r, bgr_g, bgr_b, bgr_y)
