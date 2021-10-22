@@ -9,6 +9,9 @@ To clone the repository enter the following into the terminal:
 git clone https://github.com/uqmvale6/metr4202_color.git
 ```
 
+![alt text](https://github.com/uqmvale6/metr4202_color/blob/main/color_picker.png)
+
+
 ## Color Picker
 This tool can be used with the XIMEA camera to select the BGR (Blue/Green/Red for OpenCV) values for the four block colors.
 
